@@ -1,0 +1,38 @@
+name: ledger
+extends: material
+
+logo: assets/ledger-logo-long.svg
+favicon: assets/favicon.png
+palette:
+    # Palette toggle for light mode
+  - scheme: default
+    primary: black
+    toggle:
+      icon: material/brightness-7
+      name: Switch to dark mode
+
+  # Palette toggle for dark mode
+  - scheme: slate
+    primary: black
+    toggle:
+      icon: material/brightness-4
+      name: Switch to light mode
+
+
+features:
+  - content.action.edit
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.top
+  - navigation.tracking
+  - search.highlight
+  - search.share
+  - search.suggest
+  - toc.integrate
+
+plugins:
+  - material/search
+
+ledger:
+  jira: https://ledgerhq.atlassian.net
+

@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v3
+
+      - name: Set up Python and PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: "3.11"
+          cache: true
+
+      - name: Build the source distribution and wheel
+        run: pdm build
+
+      - name: Upload the generated wheel
+        uses: actions/upload-artifact@v3
+        with:
+          name: wheel
+          path: dist/mkdocs_ledger-*.whl
+
+      - name: Upload the generated source distribution
+        uses: actions/upload-artifact@v3
+        with:
+          name: sdist
+          path: dist/mkdocs_ledger-*.tar.gz
+
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v3
+
+      - name: Set up Python and PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: "3.11"
+          cache: true
+
+      - name: Install dependencies
+        run: pdm sync -G:all
+        env:
+          PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
+
+      - name: Generate the documentation site
+        run: pdm doc:build
+
+  deploy-docs:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: build-docs
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    
+    environment:
+      name: github-pages
+      url: https://ledgerhq.github.io/mkdocs-ledger/
+    
+    steps:
+      - name: Clone
+        uses: actions/checkout@v3
+
+      - name: Setup git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com 
+
+      - name: Set up Python and PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: "3.11"
+          cache: true
+
+      - name: Install dependencies
+        run: pdm sync -G:all
+        env:
+          PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
+
+      - name: Generate the documentation site
+        run: pdm doc:deploy --push --update-aliases main latest
+

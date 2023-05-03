@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+
+<!-- Render hero under tabs -->
+{% block tabs %}
+  {{ super() }}
+
+  <style>
+    /* Hide main content and remove spacings */
+    .md-main__inner, .md-content {
+      display: none;
+      margin: 0;
+    }
+  </style>
+
+  <redoc spec-url="{{ page.meta.openapi_specs | url }}"
+    scroll-y-offset="header.md-header"
+    sort-tags-alphabetically
+    sort-operations-alphabetically
+    sort-props-alphabetically
+    required-props-first
+  >
+  </redoc>
+  <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
+
+{% endblock %}
+
+<!-- Content -->
+{% block content %}{% endblock %}
+
+<!-- Application footer -->
+{% block footer %}{% endblock %}

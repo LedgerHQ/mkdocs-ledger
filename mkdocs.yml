@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+
+# Project information
+site_name: Ledger theme for MkDocs
+site_author: Ledger
+repo_name: LedgerHQ/mkdocs-ledger
+repo_url: https://github.com/LedgerHQ/mkdocs-ledger
+edit_uri: edit/main/docs/
+
+theme: ledger
+
+markdown_extensions:
+  - mkdocs-click
+  - admonition
+  - attr_list
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - material/search
+  - mkdocstrings:
+      default_handler: python
+
+nav:
+  - Documentation: index.md
+  - Showcase:
+    - Click: cli.md
+    - Docstrings: docstrings.md
+    - OpenAPI: openapi.md
+    - Mermaid: mermaid.md
+  - Changelog: changelog.md
+
+watch:
+  - README.md
+  - CHANGELOG.md
+
+# Footer: https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/
+copyright: Copyright &copy; 2023 Ledger Enterprise
+extra:
+  version:
+    provider: mike
+  social:
+    - name: Github repository
+      icon: fontawesome/brands/github
+      link: https://github.com/LedgerHQ/mkdocs-ledger
+    - name: Ledger Vault Help Center
+      icon: fontawesome/solid/circle-question
+      link: https://help.vault.ledger.com/

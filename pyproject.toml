@@ -1,0 +1,44 @@
+[tool.pdm]
+
+[project]
+name = "mkdocs-ledger"
+version = "0.1.0"
+description = "Ledger theme for MkDocs based on Material for MkDocs"
+readme = "README.md"
+authors = [
+    {name = "Ledger", email = "engineering@ledger.fr"},
+]
+requires-python = ">=3.10"
+dependencies = [
+    "mkdocs-material>=9",
+]
+
+[project.optional-dependencies]
+click = [
+    "mkdocs-click>=0.8.0",
+]
+docstrings = [
+    "mkdocstrings-python>=0.9.0",
+]
+
+[project.entry-points."mkdocs.themes"]
+ledger = "mkdocs_ledger"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "mike>=1.1.2",
+]
+
+[tool.pdm.scripts]
+"doc:build".help = "Build this theme documentation and showcase"
+"doc:build".cmd = "mkdocs build"
+
+"doc:serve".help = "Serve/livereload this theme documentation and showcase"
+"doc:serve".cmd = "mkdocs serve --watch-theme"
+
+"doc:deploy".help = "Deplopy the versionned site"
+"doc:deploy".cmd = "mike deploy"
