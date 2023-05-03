@@ -59,8 +59,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
+      contents: write
     
     environment:
       name: github-pages
