@@ -61,10 +61,6 @@ jobs:
     permissions:
       contents: write
     
-    environment:
-      name: github-pages
-      url: https://ledgerhq.github.io/mkdocs-ledger/
-    
     steps:
       - name: Clone
         uses: actions/checkout@v3
