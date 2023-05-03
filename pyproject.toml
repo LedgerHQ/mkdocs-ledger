@@ -31,6 +31,8 @@ build-backend = "pdm.backend"
 [tool.pdm.dev-dependencies]
 dev = [
     "mike>=1.1.2",
+    # Until https://github.com/jimporter/mike/issues/148 is fixed
+    "setuptools",
 ]
 
 [tool.pdm.scripts]

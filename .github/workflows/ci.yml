@@ -85,6 +85,6 @@ jobs:
         env:
           PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
 
-      - name: Generate the documentation site
+      - name: Deploy the documentation site
         run: pdm doc:deploy --push --update-aliases main latest
 
