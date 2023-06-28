@@ -137,7 +137,8 @@ update_changelog_on_bump = true
 changelog_merge_prerelease = true
 # remove this for the first 1.x release
 major_version_zero = true
-bump_message = "bump: version $current_version → $new_version [skip-ci]"
+# Do not trigger build on bump, let the release workflow control it
+bump_message = "bump: version $current_version → $new_version [skip ci]"
 
 
 [tool.pdm.ide]
