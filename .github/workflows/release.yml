@@ -86,10 +86,11 @@ jobs:
           PDM_PUBLISH_PASSWORD: x # tricks github actions YAML parser and PDM test for empty password
         run: pdm publish --no-build
 
-      - name: Push to our internal Nexus
-        if: env.PDM_PUBLISH_USERNAME != null && env.PDM_PUBLISH_PASSWORD != null
-        env:
-          PDM_PUBLISH_REPO: https://${{ secrets.GREEN_NEXUS_HOST }}/repository/pypi-internal/
-          PDM_PUBLISH_USERNAME: ${{ secrets.GREEN_NEXUS_USER }}
-          PDM_PUBLISH_PASSWORD: ${{ secrets.GREEN_NEXUS_PASSWORD }}
-        run: pdm publish --no-build
+      # Disabled until further support
+      # - name: Push to our internal Nexus
+      #   if: env.PDM_PUBLISH_USERNAME != null && env.PDM_PUBLISH_PASSWORD != null
+      #   env:
+      #     PDM_PUBLISH_REPO: https://${{ secrets.GREEN_NEXUS_HOST }}/repository/pypi-internal/
+      #     PDM_PUBLISH_USERNAME: ${{ secrets.GREEN_NEXUS_USER }}
+      #     PDM_PUBLISH_PASSWORD: ${{ secrets.GREEN_NEXUS_PASSWORD }}
+      #   run: pdm publish --no-build
