@@ -136,6 +136,7 @@ version_provider = "scm"
 update_changelog_on_bump = true
 # remove this for the first 1.x release
 major_version_zero = true
+bump_message = "bump: version $current_version → $new_version [skip-ci]"
 
 
 [tool.pdm.ide]
