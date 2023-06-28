@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        type: choice
+        description: Pre-release type (optional)
+        options:
+          - ''
+          - alpha
+          - beta
+          - rc
+        default: ''
+        required: false
+      increment:
+        type: choice
+        description: Kind of increment (optional)
+        options:
+          - ''
+          - MAJOR
+          - MINOR
+          - PATCH
+        default: ''
+        required: false
+
+env:
+  # Force colored output in Python apps supporting it
+  PY_COLORS: "1"
+
+jobs:
+  release:
+    name: Bump and publish a new version
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Clone
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Bump using commitizen
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ github.token }}
+          changelog_increment_filename: body.md
+          extra_requirements: emotional
+          prerelease: ${{ github.event.inputs.prerelease }}
+          increment: ${{ github.event.inputs.increment }}
+          debug: true
+
+      - name: Ensure tagged version pass CI
+        uses: convictional/trigger-workflow-and-wait@v1.6.1
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          ref: ${{ env.REVISION }}
+          github_token: ${{ github.token }}
+          workflow_file_name: ci.yml
+          trigger_workflow: true
+          wait_workflow: true
+
+      - name: Set up Python and PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: "3.11"
+          cache: true
+      
+      - name: Build distribution
+        run: pdm build
+
+      - name: Push to GemFury
+        if: env.PDM_PUBLISH_USERNAME != null
+        env:
+          PDM_PUBLISH_REPO: https://push.fury.io/ledger
+          PDM_PUBLISH_USERNAME: ${{ secrets.PYPI_PUSH_TOKEN || secrets.PYPI_FULL_ACCESS_TOKEN }}
+          PDM_PUBLISH_PASSWORD: 
+        run: pdm publish --no-build
+
+      - name: Push to our internal Nexus
+        if: env.PDM_PUBLISH_USERNAME != null && env.PDM_PUBLISH_PASSWORD != null
+        env:
+          PDM_PUBLISH_REPO: https://${{ secrets.GREEN_NEXUS_HOST }}/repository/pypi-internal/
+          PDM_PUBLISH_USERNAME: ${{ secrets.GREEN_NEXUS_USER }}
+          PDM_PUBLISH_PASSWORD: ${{ secrets.GREEN_NEXUS_PASSWORD }}
+        run: pdm publish --no-build
+
+      - name: Github Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: "body.md"
+          tag_name: ${{ env.REVISION }}
