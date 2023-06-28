@@ -59,10 +59,12 @@ jobs:
         env:
           PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
 
+      - name: Update changelog
+        if: "!startsWith(github.ref, 'refs/tags')"
+        run: pdm changelog
+
       - name: Generate the documentation site
-        run: |
-          pdm changelog
-          pdm doc:build
+        run: pdm doc:build
 
   deploy-docs:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -94,7 +96,9 @@ jobs:
         env:
           PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
 
+      - name: Update CHANGELOG
+        if: "!startsWith(github.ref, 'refs/tags')"
+        run: pdm changelog
+
       - name: Deploy the documentation site
-        run: |
-          pdm changelog
-          pdm doc:deploy --push --update-aliases main latest
+        run: pdm doc:deploy --push --update-aliases main latest
