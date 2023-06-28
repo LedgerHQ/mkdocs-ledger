@@ -69,7 +69,8 @@ jobs:
         with:
           python-version: "3.11"
           cache: true
-      
+
+      # Build once to publish the same package on every repository
       - name: Build distribution
         run: pdm build
 
@@ -78,7 +79,7 @@ jobs:
         env:
           PDM_PUBLISH_REPO: https://push.fury.io/ledger
           PDM_PUBLISH_USERNAME: ${{ secrets.PYPI_PUSH_TOKEN || secrets.PYPI_FULL_ACCESS_TOKEN }}
-          PDM_PUBLISH_PASSWORD: 
+          PDM_PUBLISH_PASSWORD: ""
         run: pdm publish --no-build
 
       - name: Push to our internal Nexus

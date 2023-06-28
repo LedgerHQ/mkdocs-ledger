@@ -6,7 +6,7 @@ This site is both a documentation and a showcase for this theme.
 
 ## References
 
-This theme is based on [MkDocs](https://mkdocs.org) and some extensions so plese consult upstream documentations:
+This theme is based on [MkDocs](https://mkdocs.org) and some extensions so please consult upstream documentations:
 
 * [MkDocs](https://mkdocs.org): the documentation engine
 * [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/): the base theme
@@ -20,7 +20,7 @@ This theme is based on [MkDocs](https://mkdocs.org) and some extensions so plese
 The following pages are just here to showcase supported features:
 
 * [docstrings](docstrings.md): showcase docstrings support
-* [OpenAPI](openapi.md): showcase OpenAPI documetation based on `redoc`/`RedocLy`
+* [OpenAPI](openapi.md): showcase OpenAPI documentation based on `redoc`/`RedocLy`
 * [Click](cli.md): showcase `click` automatic documentation
 * [Mermaid](mermaid.md): showcase `mermaid.js` diagrams integration
 

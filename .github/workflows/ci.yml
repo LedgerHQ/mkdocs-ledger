@@ -18,6 +18,12 @@ jobs:
           python-version: "3.11"
           cache: true
 
+      - name: Lint
+        uses: pre-commit/action@v3.0.0
+
+      - name: Install dependencies
+        run: pdm sync -dG:all
+
       - name: Build the source distribution and wheel
         run: pdm build
 
@@ -46,9 +52,12 @@ jobs:
           cache: true
 
       - name: Install dependencies
-        run: pdm sync -G:all
+        run: pdm sync -dG:all
         env:
           PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
+
+      - name: Run the test suite
+        run: pdm test
 
       - name: Generate the documentation site
         run: pdm doc:build
@@ -60,7 +69,7 @@ jobs:
 
     permissions:
       contents: write
-    
+
     steps:
       - name: Clone
         uses: actions/checkout@v3
@@ -70,7 +79,7 @@ jobs:
       - name: Setup git
         run: |
           git config user.name github-actions
-          git config user.email github-actions@github.com 
+          git config user.email github-actions@github.com
 
       - name: Set up Python and PDM
         uses: pdm-project/setup-pdm@v3
@@ -79,10 +88,9 @@ jobs:
           cache: true
 
       - name: Install dependencies
-        run: pdm sync -G:all
+        run: pdm sync -dG:all
         env:
           PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
 
       - name: Deploy the documentation site
         run: pdm doc:deploy --push --update-aliases main latest
-

@@ -1,9 +1,10 @@
 # mkdocs-ledger
 
+[![CI](https://github.com/LedgerHQ/mkdocs-ledger/actions/workflows/ci.yml/badge.svg)](https://github.com/LedgerHQ/mkdocs-ledger/actions/workflows/ci.yml)
+
 MkDocs Ledger theme  based on Material for MkDocs.
 
 <!-- --8<-- [start:getting-started] -->
-
 
 ## Getting started
 

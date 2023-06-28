@@ -1,6 +1,6 @@
 # Mermaid
 
-See [Meterial for MkDocs diagrams documentation](https://squidfunk.github.io/mkdocs-material/reference/diagrams/) for a complete reference.
+See [Material for MkDocs diagrams documentation](https://squidfunk.github.io/mkdocs-material/reference/diagrams/) for a complete reference.
 
 Those examples are extracted from the [Mermaid documentation](https://mermaid.js.org/syntax/) and are the most complexes found to showcase all styles and possibilities.
 
@@ -346,7 +346,7 @@ gitGraph:
     title Component diagram for Internet Banking System - API Application
 
     Container(spa, "Single Page Application", "javascript and angular", "Provides all the internet banking functionality to customers via their web browser.")
-    Container(ma, "Mobile App", "Xamarin", "Provides a limited subset ot the internet banking functionality to customers via their mobile mobile device.")
+    Container(ma, "Mobile App", "Xamarin", "Provides a limited subset of the internet banking functionality to customers via their mobile mobile device.")
     ContainerDb(db, "Database", "Relational Database Schema", "Stores user registration information, hashed authentication credentials, access logs, etc.")
     System_Ext(mbs, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
 

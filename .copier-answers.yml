@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier
+_commit: c4cc19a
+_src_path: git@github.com:LedgerHQ/python.copier.git
+author_email: axel.haustant@ledger.fr
+author_fullname: Axel Haustant
+github_repository: mkdocs-ledger
+github_username: noirbizarre
+has_docs: false
+is_cli: false
+is_fastapi: false
+is_lib: true
+project_description: A MkDocs Ledger theme based on Material for MkDocs
+project_name: mkdocs-ledger
+project_slug: mkdocs-ledger
+python_distribution: mkdocs-ledger
+python_package: mkdocs_ledger
+use_db: false
+use_redis: false
+use_src: false

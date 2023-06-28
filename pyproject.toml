@@ -1,18 +1,29 @@
-[tool.pdm]
-
 [project]
 name = "mkdocs-ledger"
-version = "0.1.0"
-description = "Ledger theme for MkDocs based on Material for MkDocs"
-readme = "README.md"
+description = "A MkDocs Ledger theme based on Material for MkDocs"
 authors = [
-    {name = "Ledger", email = "engineering@ledger.fr"},
+    {name = "Axel Haustant", email = "axel.haustant@ledger.fr"},
 ]
-requires-python = ">=3.10"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["mkdocs", "theme"]
+dynamic = ["version"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Typing :: Typed",
+]
+
 dependencies = [
     "mkdocs-material>=9",
 ]
-
 [project.optional-dependencies]
 click = [
     "mkdocs-click>=0.8.0",
@@ -21,26 +32,169 @@ docstrings = [
     "mkdocstrings-python>=0.9.0",
 ]
 
+
 [project.entry-points."mkdocs.themes"]
 ledger = "mkdocs_ledger"
+
+
+[project.urls]
+Homepage = "https://github.com/LedgerHQ/mkdocs-ledger"
+Documentation = "https://github.com/LedgerHQ/mkdocs-ledger#readme"
+Repository = "https://github.com/LedgerHQ/mkdocs-ledger"
+Issues = "https://github.com/LedgerHQ/mkdocs-ledger/issues"
+
 
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
+
+[[tool.pdm.source]]
+url = "https://${PYPI_DEPLOY_TOKEN}:@pypi.fury.io/ledger/"
+verify_ssl = true
+name = "fury"
+
+
+[tool.pdm.resolution]
+# Search PyPI first
+respect-source-order = true
+
+
+[tool.pdm.version]
+source = "scm"
+write_to = "mkdocs_ledger/_version.py"
+write_template = '__version__ = "{}"'
+
+
 [tool.pdm.dev-dependencies]
 dev = [
-    "mike>=1.1.2",
-    # Until https://github.com/jimporter/mike/issues/148 is fixed
+    # Because: https://github.com/jimporter/mike/issues/160
+    # Until https://github.com/jimporter/mike/issues/148 is released
+    "git+https://github.com/jimporter/mike.git@2d9af5c",
     "setuptools",
+    "pytest>=7.1.2",
+    "pytest-sugar>=0.9.5",
+    "pytest-cov>=3.0.0",
+    "black>=23.3.0",
+    "mypy>=1.3.0",
+    "ruff>=0.0.270",
+    "emotional",
+    "tox",
+    "tox-pdm>=0.5",
 ]
 
+
 [tool.pdm.scripts]
+test.help = "Run the test suite"
+test.cmd = "pytest"
+
+"test:all".help = "Run the test suite against all supported versions"
+"test:all".cmd = "tox"
+
+lint.help = "Lint all tracked files using pre-commit"
+lint.cmd = "pre-commit run --all-files"
+
+format.help = "Format the code according to known rules"
+format.composite = [
+    "codespell --write-changes",
+    "ruff --fix-only --show-fixes src tests",
+    "black src tests",
+]
+
+changelog.help = "Update the changelog"
+changelog.cmd = "cz changelog"
+
+commit.help = "Commit using the commitizen helper"
+commit.cmd = "cz commit"
+
 "doc:build".help = "Build this theme documentation and showcase"
 "doc:build".cmd = "mkdocs build"
 
 "doc:serve".help = "Serve/livereload this theme documentation and showcase"
 "doc:serve".cmd = "mkdocs serve --watch-theme"
 
-"doc:deploy".help = "Deplopy the versionned site"
+"doc:deploy".help = "Deplopy the versioned site"
 "doc:deploy".cmd = "mike deploy"
+
+
+[tool.commitizen]
+name = "emotional"
+github = "LedgerHQ/mkdocs-ledger"
+jira_url = "https://ledgerhq.atlassian.net"
+jira_prefixes = [
+  "ARCHI-",
+  "CAL-",
+  "INFRA-",
+  "INFRAPRJ-",
+  "IRITSM-",
+  "PE-",
+  "VG-",
+  "VSD-",
+]
+order_by_scope = true
+version_provider = "scm"
+
+
+[tool.pdm.ide]
+linters = ["ruff"]
+formatter = "black"
+testing = "pytest"
+
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+norecursedirs = ".git build dist"
+testpaths = [
+  "mkdocs_ledger/",
+  "tests/",
+]
+
+
+[tool.coverage.run]
+source_pkgs = ["mkdocs_ledger"]
+branch = true
+omit = [
+  "tests/*",
+]
+
+
+[tool.black]
+# Black adds 10% tolernace which makes it to 110
+# See:
+#  https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
+line-length = 100
+
+
+[tool.ruff]
+line-length = 110
+respect-gitignore = true
+select = [
+    # Pyflakes
+    "F",
+    # Pycodestyle
+    "E",
+    "W",
+    # McCabe # fake8-comprehension
+    "C",
+    # Pyupgrade
+    "UP",
+    # isort
+    "I001"
+]
+src = [".", "tests"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.isort]
+known-first-party = ["mkdocs_ledger"]
+known-third-party = ["pytest"]
+lines-between-types = 1
+
+
+[tool.mypy]
+exclude = [
+  "docs",
+  "build",
+  "dist",
+]
