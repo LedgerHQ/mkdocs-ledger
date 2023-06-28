@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: pdm sync -dG:all
 
+      - name: Run the test suite
+        run: pdm test
+
       - name: Build the source distribution and wheel
         run: pdm build
 
@@ -56,11 +59,10 @@ jobs:
         env:
           PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
 
-      - name: Run the test suite
-        run: pdm test
-
       - name: Generate the documentation site
-        run: pdm doc:build
+        run: |
+          pdm changelog
+          pdm doc:build
 
   deploy-docs:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -93,4 +95,6 @@ jobs:
           PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
 
       - name: Deploy the documentation site
-        run: pdm doc:deploy --push --update-aliases main latest
+        run: |
+          pdm changelog
+          pdm doc:deploy --push --update-aliases main latest
