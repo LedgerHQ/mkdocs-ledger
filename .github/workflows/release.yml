@@ -62,6 +62,12 @@ jobs:
           trigger_workflow: true
           wait_workflow: true
 
+      - name: Github Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: "body.md"
+          tag_name: ${{ env.REVISION }}
+
       - name: Set up Python and PDM
         uses: pdm-project/setup-pdm@v3
         with:
@@ -86,9 +92,3 @@ jobs:
           PDM_PUBLISH_USERNAME: ${{ secrets.GREEN_NEXUS_USER }}
           PDM_PUBLISH_PASSWORD: ${{ secrets.GREEN_NEXUS_PASSWORD }}
         run: pdm publish --no-build
-
-      - name: Github Release
-        uses: softprops/action-gh-release@v1
-        with:
-          body_path: "body.md"
-          tag_name: ${{ env.REVISION }}
