@@ -83,7 +83,8 @@ jobs:
         env:
           PDM_PUBLISH_REPO: https://push.fury.io/ledger
           PDM_PUBLISH_USERNAME: ${{ secrets.PYPI_PUSH_TOKEN || secrets.PYPI_FULL_ACCESS_TOKEN }}
-        run: pdm publish --no-build --password ""
+          PDM_PUBLISH_PASSWORD: x # tricks github actions YAML parser and PDM test for empty password
+        run: pdm publish --no-build
 
       - name: Push to our internal Nexus
         if: env.PDM_PUBLISH_USERNAME != null && env.PDM_PUBLISH_PASSWORD != null
