@@ -1,5 +1,12 @@
 # Changelog
 
-## Unreleased
+## 🚀 0.1.0 (2023-06-28)
 
-- Initial release with light and dark Ledger theme, `redoc`, `mkdocs-click` and `mkdocstrings` integration
+### 💫 New features
+
+- Initial import
+
+### 📦 Build
+
+- **dev**: fix `setuptools` being silently required
+- apply the `python.copier` template (partially)
