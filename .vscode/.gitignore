@@ -1,0 +1,5 @@
+# ignore everything at root by default
+*
+# except
+!/.gitignore
+!/extensions.json

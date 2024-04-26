@@ -125,6 +125,7 @@ venv.bak/
 
 # mkdocs documentation
 /site
+openapi.yaml
 
 # mypy
 .mypy_cache/

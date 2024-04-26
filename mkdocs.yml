@@ -9,6 +9,11 @@ edit_uri: edit/main/docs/
 
 theme: ledger
 
+plugins:
+  - material/search
+  - mkdocstrings:
+      default_handler: python
+
 markdown_extensions:
   - mkdocs-click
   - admonition
@@ -22,18 +27,13 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-
-plugins:
-  - material/search
-  - mkdocstrings:
-      default_handler: python
 
 nav:
   - Documentation: index.md
@@ -42,14 +42,17 @@ nav:
     - Docstrings: docstrings.md
     - OpenAPI: openapi.md
     - Mermaid: mermaid.md
+  - Contributing: contributing.md
+  - Housekeeping: housekeeping.md
   - Changelog: changelog.md
 
 watch:
   - README.md
   - CHANGELOG.md
+  - CONTRIBUTING.md
 
 # Footer: https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/
-copyright: Copyright &copy; 2023 Ledger Enterprise
+copyright: Copyright &copy; 2024 Ledger Enterprise
 extra:
   version:
     provider: mike
@@ -57,6 +60,3 @@ extra:
     - name: Github repository
       icon: fontawesome/brands/github
       link: https://github.com/LedgerHQ/mkdocs-ledger
-    - name: Ledger Vault Help Center
-      icon: fontawesome/solid/circle-question
-      link: https://help.vault.ledger.com/

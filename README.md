@@ -2,13 +2,13 @@
 
 [![CI](https://github.com/LedgerHQ/mkdocs-ledger/actions/workflows/ci.yml/badge.svg)](https://github.com/LedgerHQ/mkdocs-ledger/actions/workflows/ci.yml)
 
-MkDocs Ledger theme  based on Material for MkDocs.
+A [MkDocs](https://www.mkdocs.org) Ledger theme based on [Material for MkDocs](https://www.mkdocs.org).
 
 <!-- --8<-- [start:getting-started] -->
 
 ## Getting started
 
-Just follow the README steps. Those are
+Just follow the following steps.
 
 ### Installation
 
@@ -49,3 +49,11 @@ plugins:
 ```
 
 <!-- --8<-- [end:getting-started] -->
+
+## Documentation
+
+Documentation is available at <https://ledgerhq.github.io/mkdocs-ledger/>
+
+## Contributing
+
+Read the [dedicated contributing guidelines](./CONTRIBUTING.md).

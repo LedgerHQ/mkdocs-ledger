@@ -1,109 +1,57 @@
-name: CI
+name: 👮 CI
 
 on:
   pull_request:
   push:
+    branches:
+      - main
   workflow_dispatch:
 
+env:
+  # Force colored output in Python apps supporting it
+  PY_COLORS: "1"
+
 jobs:
-  build:
+  lint:
+    name: 🕵 Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Clone
-        uses: actions/checkout@v3
+      - uses: LedgerHQ/actions/pdm/lint@main
 
-      - name: Set up Python and PDM
-        uses: pdm-project/setup-pdm@v3
+  tests:
+    name: 🧪 Tests
+    runs-on: ubuntu-latest
+    needs: [lint]
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+    steps:
+      - uses: LedgerHQ/actions/pdm/test@main
         with:
-          python-version: "3.11"
-          cache: true
-
-      - name: Lint
-        uses: pre-commit/action@v3.0.0
-
-      - name: Install dependencies
-        run: pdm sync -dG:all
-
-      - name: Run the test suite
-        run: pdm test
-
-      - name: Build the source distribution and wheel
-        run: pdm build
-
-      - name: Upload the generated wheel
-        uses: actions/upload-artifact@v3
-        with:
-          name: wheel
-          path: dist/mkdocs_ledger-*.whl
-
-      - name: Upload the generated source distribution
-        uses: actions/upload-artifact@v3
-        with:
-          name: sdist
-          path: dist/mkdocs_ledger-*.tar.gz
+          python-version: ${{ matrix.python-version }}
+          github-token: ${{ secrets.CI_BOT_TOKEN }}
 
   build-docs:
+    name: 📖 Build documentation
     runs-on: ubuntu-latest
+    needs: [lint]
     steps:
-      - name: Clone
-        uses: actions/checkout@v3
+      - uses: LedgerHQ/actions/pdm/doc/build@main
         with:
-          fetch-depth: 0
-
-      - name: Set up Python and PDM
-        uses: pdm-project/setup-pdm@v3
-        with:
-          python-version: "3.11"
-          cache: true
-
-      - name: Install dependencies
-        run: pdm sync -dG:all
-        env:
-          PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
-
-      - name: Update changelog
-        if: "!startsWith(github.ref, 'refs/tags')"
-        run: pdm changelog
-
-      - name: Generate the documentation site
-        run: pdm doc:build
+          openapi: false
+          site: true
 
   deploy-docs:
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags')
+    name: 📚 Deploy documentation
     needs: build-docs
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags')
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
 
     steps:
-      - name: Clone
-        uses: actions/checkout@v3
+      - uses: LedgerHQ/actions/pdm/doc/publish@main
         with:
-          fetch-depth: 0
-
-      - name: Setup git
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-
-      - name: Set up Python and PDM
-        uses: pdm-project/setup-pdm@v3
-        with:
-          python-version: "3.11"
-          cache: true
-
-      - name: Install dependencies
-        run: pdm sync -dG:all
-        env:
-          PYPI_DEPLOY_TOKEN: ${{ secrets.PYPI_DEPLOY_TOKEN }}
-
-      - name: Deploy the documentation site (main)
-        if: github.ref == 'refs/heads/main'
-        run: |
-          pdm changelog
-          pdm doc:deploy --push --update-aliases main latest
-
-      - name: Deploy the documentation site (tag)
-        if: startsWith(github.ref, 'refs/tags')
-        run: pdm doc:deploy --push ${{ github.ref_name }}
+          openapi: false
+          site: true
