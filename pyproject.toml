@@ -2,7 +2,7 @@
 name = "mkdocs-ledger"
 description = "A MkDocs Ledger theme based on Material for MkDocs"
 authors = [
-    {name = "Axel Haustant", email = "axel.haustant@ledger.fr"},
+    {name = "Ledger", email = "hello@ledger.fr"},
 ]
 readme = "README.md"
 requires-python = ">=3.8"
@@ -18,6 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Typing :: Typed",
 ]
 
@@ -39,7 +40,7 @@ ledger = "mkdocs_ledger"
 
 [project.urls]
 Homepage = "https://github.com/LedgerHQ/mkdocs-ledger"
-Documentation = "https://github.com/LedgerHQ/mkdocs-ledger#readme"
+Documentation = "https://ledgerhq.github.io/mkdocs-ledger"
 Repository = "https://github.com/LedgerHQ/mkdocs-ledger"
 Issues = "https://github.com/LedgerHQ/mkdocs-ledger/issues"
 
@@ -49,40 +50,35 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 
-[[tool.pdm.source]]
-url = "https://${PYPI_DEPLOY_TOKEN}:@pypi.fury.io/ledger/"
-verify_ssl = true
-name = "fury"
-
-
-[tool.pdm.resolution]
-# Search PyPI first
-respect-source-order = true
+[tool.pdm]
+plugins = [
+    "sync-pre-commit-lock",
+]
 
 
 [tool.pdm.version]
 source = "scm"
-write_to = "mkdocs_ledger/_version.py"
-write_template = '__version__ = "{}"'
-
+write_to = "mkdocs_ledger/VERSION"
 
 [tool.pdm.dev-dependencies]
-dev = [
-    # Because: https://github.com/jimporter/mike/issues/160
-    # Until https://github.com/jimporter/mike/issues/148 is released
-    "git+https://github.com/jimporter/mike.git@2d9af5c",
-    "setuptools",
+test = [
     "pytest>=7.1.2",
     "pytest-sugar>=0.9.5",
     "pytest-cov>=3.0.0",
-    "black>=23.3.0",
-    "mypy>=1.3.0",
-    "ruff>=0.0.270",
-    "emotional",
+]
+lint = [
+    "codespell>=2.2.6",
+    "mypy>=1.7.0",
+    "ruff>=0.3.0",
+]
+tox = [
     "tox",
     "tox-pdm>=0.5",
 ]
-
+docs = [
+    "mike>=2.0",
+    "emotional",
+]
 
 [tool.pdm.scripts]
 test.help = "Run the test suite"
@@ -96,10 +92,42 @@ lint.cmd = "pre-commit run --all-files"
 
 format.help = "Format the code according to known rules"
 format.composite = [
-    "codespell --write-changes",
-    "ruff --fix-only --show-fixes src tests",
-    "black src tests",
+    "codespell --write-changes --interactive 2",
+    # See: https://docs.astral.sh/ruff/formatter/#sorting-imports
+    "ruff check --select I --fix-only --show-fixes mkdocs_ledger tests",
+    "ruff format mkdocs_ledger tests"
 ]
+
+typing.help = "Full typing linting (includes imported packages and uncommmited files)"
+typing.cmd = "mypy mkdocs_ledger tests --warn-unused-ignores"
+
+cover.help = "Run the test suite with coverage"
+pre_cover = "coverage erase"
+cover.composite = [
+  """
+  test
+    --cov
+    --cov-report=term
+    --cov-report=html:reports/coverage
+    --cov-report=xml:reports/coverage.xml
+    --no-cov-on-fail
+    --junitxml=reports/tests.xml
+  """
+]
+
+doc.help = "Generate the documentation site"
+doc.composite = [
+    "doc:build",
+]
+
+"doc:build".help = "Build the documentation site"
+"doc:build".cmd = "mkdocs build"
+
+"doc:serve".help = "Generate the documentation site (live reload)."
+"doc:serve".cmd = "mkdocs serve"
+
+"doc:deploy".help = "Deploy a versioned documentation using mike"
+"doc:deploy".cmd = "mike deploy"
 
 changelog.help = "Update the changelog"
 changelog.cmd = "cz changelog --incremental"
@@ -107,14 +135,15 @@ changelog.cmd = "cz changelog --incremental"
 commit.help = "Commit using the commitizen helper"
 commit.cmd = "cz commit"
 
-"doc:build".help = "Build this theme documentation and showcase"
-"doc:build".cmd = "mkdocs build"
+bump.help = "Bump the release"
+bump.cmd = "cz bump --yes --changelog --check-consistency"
 
-"doc:serve".help = "Serve/livereload this theme documentation and showcase"
-"doc:serve".cmd = "mkdocs serve --watch-theme"
-
-"doc:deploy".help = "Deplopy the versioned site"
-"doc:deploy".cmd = "mike deploy"
+update-all.help = "Update all dependencies (keep consistency, accept pdm update parameters)"
+update-all.composite = [
+  "pre-commit autoupdate",
+  "{pdm} update {args}",
+  "{pdm} format",
+]
 
 
 [tool.commitizen]
@@ -137,14 +166,10 @@ update_changelog_on_bump = true
 changelog_merge_prerelease = true
 # remove this for the first 1.x release
 major_version_zero = true
-# Do not trigger build on bump, let the release workflow control it
-bump_message = "bump: version $current_version → $new_version [skip ci]"
 
 
-[tool.pdm.ide]
-linters = ["ruff"]
-formatter = "black"
-testing = "pytest"
+[tool.codespell]
+ignore-words=".codespellignore"
 
 
 [tool.pytest.ini_options]
@@ -164,17 +189,10 @@ omit = [
 ]
 
 
-[tool.black]
-# Black adds 10% tolernace which makes it to 110
-# See:
-#  https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
-line-length = 100
-
-
 [tool.ruff]
-line-length = 110
+line-length = 100
 respect-gitignore = true
-select = [
+lint.select = [
     # Pyflakes
     "F",
     # Pycodestyle
@@ -187,20 +205,24 @@ select = [
     # isort
     "I001"
 ]
-src = [".", "tests"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["mkdocs_ledger"]
 known-third-party = ["pytest"]
 lines-between-types = 1
 
 
 [tool.mypy]
+# https://mypy.readthedocs.io/en/stable/command_line.html#cmdoption-mypy-exclude
 exclude = [
-  "docs",
-  "build",
-  "dist",
+  "/docs/",
+  "/build/",
+  "/dist/",
+  "/site/",
+  "/__pypackages__/",
 ]
+# https://mypy.readthedocs.io/en/stable/command_line.html#cmdoption-mypy-ignore-missing-imports
+ignore_missing_imports = true

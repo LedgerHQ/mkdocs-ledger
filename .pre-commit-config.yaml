@@ -1,16 +1,12 @@
-ci:
-  autoupdate_schedule: weekly
-  autoupdate_commit_msg: 'ci(pre-commit): pre-commit.ci autoupdate'
-  autofix_commit_msg: 'ci(pre-commit): pre-commit.ci autofixes'
-
 default_install_hook_types:
   - pre-commit
   - commit-msg
   - pre-push
+  - post-checkout
+  - post-merge
 
 default_stages:
-  - commit
-  - push
+  - pre-commit
 
 repos:
   - repo: meta
@@ -18,7 +14,7 @@ repos:
       - id: check-hooks-apply
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
@@ -36,42 +32,52 @@ repos:
       - id: debug-statements
       - id: check-toml
       - id: detect-private-key
+      - id: check-merge-conflict
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: 3.5.2
+    rev: v3.24.0
     hooks:
       - id: commitizen
         additional_dependencies:
           - emotional
 
+  - repo: https://github.com/pdm-project/pdm
+    rev: 2.11.1
+    hooks:
+      - id: pdm-lock-check
+      - id: pdm-sync
+
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.23.2
+    rev: 0.27.2
     hooks:
       - id: check-github-workflows
       - id: check-dependabot
 
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.275
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.2
     hooks:
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
-
-  - repo: https://github.com/psf/black
-    rev: 23.3.0
-    hooks:
-      - id: black
+        args: [--fix]
+      - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.4.1
+    rev: v1.10.0
     hooks:
       - id: mypy
         exclude: docs/.*\.pyi?$
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.5
+    rev: v2.2.6
     hooks:
     - id: codespell
       additional_dependencies: [tomli]
-      args: ["--write-changes", "--toml", "pyproject.toml"]
-      # Ignore typos in changelog, they will be overriden
-      exclude: ^CHANGELOG.md$
+      args: ["--write-changes"]
+      # Ignore typos in changelog, they will be overridden
+      exclude: ^CHANGELOG\.md$
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.11.0
+    hooks:
+    - id: markdownlint-cli2
+      args: ["--fix"]
+      exclude: ^CHANGELOG\.md$

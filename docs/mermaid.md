@@ -1,10 +1,13 @@
 # Mermaid
 
-See [Material for MkDocs diagrams documentation](https://squidfunk.github.io/mkdocs-material/reference/diagrams/) for a complete reference.
+See [Material for MkDocs diagrams documentation](https://squidfunk.github.io/mkdocs-material/reference/diagrams/)
+for a complete reference.
 
-Those examples are extracted from the [Mermaid documentation](https://mermaid.js.org/syntax/) and are the most complexes found to showcase all styles and possibilities.
+Those examples are extracted from the [Mermaid documentation](https://mermaid.js.org/syntax/)
+and are the most complexes found to showcase all styles and possibilities.
 
-Some have a `Syntax error in graph` instead of the diagram: it means that `mkdocs-material`'s `mermaid.js` version does not support them yet.
+Some have a `Syntax error in graph` instead of the diagram:
+it means that `mkdocs-material`'s `mermaid.js` version does not support them yet.
 
 ## Flowchart
 
@@ -306,7 +309,7 @@ gitGraph:
     Person(customer, Customer, "A customer of the bank, with personal bank accounts", $tags="v1.0")
 
     Container_Boundary(c1, "Internet Banking") {
-        Container(spa, "Single-Page App", "JavaScript, Angular", "Provides all the Internet banking functionality to cutomers via their web browser")
+        Container(spa, "Single-Page App", "JavaScript, Angular", "Provides all the Internet banking functionality to customers via their web browser")
         Container_Ext(mobile_app, "Mobile App", "C#, Xamarin", "Provides a limited subset of the Internet banking functionality to customers via their mobile device")
         Container(web_app, "Web Application", "Java, Spring MVC", "Delivers the static content and the Internet banking SPA")
         ContainerDb(database, "Database", "SQL Database", "Stores user registration information, hashed auth credentials, access logs, etc.")
@@ -459,7 +462,6 @@ gitGraph:
 
 ```
 
-
 ## Mindmaps
 
 ```mermaid
@@ -482,7 +484,6 @@ mindmap
       Mermaid
 
 ```
-
 
 ## Timeline
 
