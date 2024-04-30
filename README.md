@@ -47,7 +47,16 @@ plugins:
   - material/search
   - mkdocstrings
 ```
+### Github Alerts
 
+To enable support for [GitHub Alerts][github-alerts], you need to enable the [GitHub Callouts extension](https://oprypin.github.io/markdown-callouts/).
+
+```yaml
+markdown_extensions:
+  - github-callouts
+```
+
+[github-alerts]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts
 <!-- --8<-- [end:getting-started] -->
 
 ## Documentation

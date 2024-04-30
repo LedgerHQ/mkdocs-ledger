@@ -24,6 +24,7 @@ classifiers = [
 
 dependencies = [
     "mkdocs-material>=9",
+    "markdown-callouts>=0.4.0",
 ]
 [project.optional-dependencies]
 click = [

@@ -17,6 +17,7 @@ plugins:
 markdown_extensions:
   - mkdocs-click
   - admonition
+  - github-callouts
   - attr_list
   - pymdownx.details
   - pymdownx.highlight:
