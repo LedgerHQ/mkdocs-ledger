@@ -1,3 +1,7 @@
+"""
+A Ledger theme for MkDocs + Material.
+"""
+
 from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version

@@ -21,6 +21,7 @@ palette:
 
 features:
   - content.action.edit
+  - navigation.indexes
   - navigation.tabs
   - navigation.tabs.sticky
   - navigation.top

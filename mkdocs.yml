@@ -13,6 +13,34 @@ plugins:
   - material/search
   - mkdocstrings:
       default_handler: python
+      handlers:
+        python:
+          import:
+          - https://docs.python.org/3/objects.inv
+          paths: [src]
+          options:
+            docstring_options:
+              ignore_init_summary: true
+            docstring_section_style: list
+            filters: ["!^_"]
+            heading_level: 1
+            inherited_members: true
+            merge_init_into_class: true
+            parameter_headings: true
+            separate_signature: true
+            show_root_heading: true
+            show_root_full_path: true
+            show_signature_annotations: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            summary: true
+  - gen-files:
+      scripts:
+      - scripts/gendocs.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+
 
 markdown_extensions:
   - mkdocs-click
@@ -43,6 +71,7 @@ nav:
     - Docstrings: docstrings.md
     - OpenAPI: openapi.md
     - Mermaid: mermaid.md
+  - API Reference: reference/
   - Contributing: contributing.md
   - Housekeeping: housekeeping.md
   - Changelog: changelog.md
@@ -51,6 +80,7 @@ watch:
   - README.md
   - CHANGELOG.md
   - CONTRIBUTING.md
+  - mkdocs_ledger
 
 # Footer: https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/
 copyright: Copyright &copy; 2024 Ledger Enterprise

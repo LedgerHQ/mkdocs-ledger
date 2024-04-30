@@ -34,8 +34,8 @@ Just use the `ledger` theme in your `mkdocs.yml` configuration:
 theme: ledger
 ```
 
-For docstrings support, use the `mkdocstrings` plugin (`material/search` needs to be added too).
-For click support, use the `mkdocs-click` markdown plugin.
+For docstrings support, use the [`mkdocstrings` plugin](https://mkdocstrings.github.io).
+For click support, use the [`mkdocs-click` plugin](https://github.com/mkdocs/mkdocs-click).
 
 ```yaml
 theme: ledger
@@ -47,6 +47,58 @@ plugins:
   - material/search
   - mkdocstrings
 ```
+
+> [!NOTE]
+> If you override `plugins`, you need to put every provided plugins, including `material/search`.
+
+### Detailed `mkdocstrings` configuration
+
+In order to have a shiny docstring reference, you may use the following configuration:
+
+```yaml
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          import:
+            # Add used libs for external cross-references
+            - https://docs.python.org/3/objects.inv
+          paths: [src]
+          options:
+            docstring_options:
+              ignore_init_summary: true
+            docstring_section_style: list
+            filters: ["!^_"]
+            heading_level: 1
+            inherited_members: true
+            merge_init_into_class: true
+            parameter_headings: true
+            separate_signature: true
+            show_root_heading: true
+            show_root_full_path: true
+            show_signature_annotations: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            summary: true
+  - gen-files:
+      scripts:
+      - scripts/gendocs.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+```
+
+And in `scripts/gendocs.py`:
+
+```python
+from pathlib import Path
+from mkdocs_ledger.docstrings import generate_docstrings
+
+ROOT = Path(__file__).parent.parent
+# Path to root package
+generate_docstrings(ROOT / "mkdocs_ledger")
+```
+
 ### Github Alerts
 
 To enable support for [GitHub Alerts][github-alerts], you need to enable the [GitHub Callouts extension](https://oprypin.github.io/markdown-callouts/).
